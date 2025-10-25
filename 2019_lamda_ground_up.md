@@ -4,17 +4,20 @@ aliases: []
 tags: []
 ---
 
-## 1. TODOs
-- [ ] add video timestamps
+# PART1:published
+> https://medium.com/@pavolkutaj/part1-840fd9b01ba2
 
-## 2. INTRO
+The aim of this multi_part series is to annotate David Baezley's [Lambda Calculus from the Ground Up](https://www.youtube.com/watch?v=pkCLMl0e_0k)
+This part is about the first 35 mins of the lecture. Use the link above to start watching. Use Python Repl to follow. 
+
+## 1. INTRO
 * only single-argument functions are allowed
 * nothing other than function mechanism is allowed
 * no packages, no objects, no numbers, no strings, no types - only functions; no operators
 * can you compute anything if a single-argument function is the only thing in the universe?
 * no control flow
 
-## 3. SWITCH
+## 2. SWITCH
 
 ```python
 def left_switch(left: Any) -> Callable:
@@ -38,10 +41,10 @@ assert right_switch("a")("b") == "b"
 ```
 
 
-### 3.1. rewriting two-argument func into single-arg with the technique known as currying
+### 2.1. explain currying via example: rewriting two-argument func into single-argument ones
 
 ```python
-def add(x, y):
+def add(x:int, y:int) -> int:
     return x + y
 
 
@@ -51,14 +54,13 @@ assert add(1, 1) == 2
 def add(x: int) -> callable:
     def f(y: int) -> int:
         return x + y
-
     return f
 
-
+# CURRYING
 assert add(1)(1) == 2
 ```
 
-## 4. TRUE/FALSE
+## 3. TRUE/FALSE
 ![](pasted%20image%2020250408193642.png)
 
 * can we represent `TRUE` and `false` with this scheme?
@@ -70,14 +72,14 @@ assert add(1)(1) == 2
 
 ```python
 def true(x):
-    return lambda y: x  # vyberatko vrati predok
+    return lambda y: x  # selector chooses the front
 
 
 assert true(1)(0) == 1
 
 
 def false(x):
-    return lambda y: y  # vyberatko vrati zadok
+    return lambda y: y  # selector choosing the back
 
 
 assert false(1)(0) == 0
@@ -87,20 +89,19 @@ assert false(1)(0) == 0
 * so that the function through returns a function that takes one parameter
 * and the cold with another call
 * and return the first value that you give it
-* there were teachers saying that lambda should be a key on the keyboard
 * here, truth is behavior it is not correspondence - these are **opposite** behaviors
 * there is nothing **concrete** to hang on; whatever the x is
 
-### 4.1. anonymous functions as products have this neat freeing effect
+### 3.1. anonymous functions as products have this neat freeing effect
 * so you don't need to think about the name for the function
 * the main function of the whole name
 
-## 5. BOOLEANS: not, or, and
+## 4. BOOLEANS: not, or, and
 
 single boolean transformation
 
-### 5.1. NOT
-##### 5.1.0.1. hello world
+### 4.1. NOT
+##### 4.1.0.1. hello world
 * realize the difference between calling() and object **test** 
 * there is **no currying** here
 
@@ -126,7 +127,7 @@ assert not(false)(1)(0) == 1 # ok
 * your pass a function
 * i need calls the function with two parameters that are also functions
 
-### 5.2. OR
+### 4.2. OR
 * you call twice again, you combine bool functions/pickers --> there has to be a lambda for the second arg
 
 ```python
@@ -152,7 +153,7 @@ def or(x):
     return lambda y: x(x)(y)
 
 ```
-### 5.3. AND
+### 4.3. AND
 
  | x     | y     | result | selector |
  | ----- | ----- | ------ | -------- |
@@ -174,8 +175,16 @@ and(false)(true)  # --> false
 and(false)(false) # --> false
 ```
 
+# PART2:published
+> https://pavolkutaj.medium.com/part2-bf44d0fc4f7b 
 
-## 6. NUMBERS
+The aim of this multi_part series is to annotate David Baezley's [Lambda Calculus from the Ground Up](https://www.youtube.com/watch?v=pkCLMl0e_0k)
+This, part2, is about numbers + arithmetics expressed with lambda calculus. 
+It is inspired by [PeanoArithmetic](https://en.wikipedia.org/wiki/Peano_axioms).
+Timewise, this part covers ~ 0h:35min to 1h:08min of the lecture. Use the link above to start watching. Use Python Repl to follow. 
+StartURL: https://youtu.be/pkCLMl0e_0k?si=G2AZCYnjV3Wlq02M&t=2083
+
+## 1. NUMBERS
 * do not overthink numbers - go back to kindergarten and use fingercounting and 
 * visual representation
 * how can we do that with numbers?
@@ -203,7 +212,7 @@ assert two(lambda n: n + 1)(0) == 2
 
 * let me rewrite this
 
-### 6.1. fail > replacing lambdas with named functions stressing the abstractness of number
+### 1.1. fail > replacing lambdas with named functions stressing the abstractness of number
 * let's put come concreteness to the abstraction so that abstraction is clearer
 * below is my initial thinking that i sincorre t
 
@@ -221,7 +230,7 @@ def two(action: callable) -> callable:
 assert two(action=lambda n: n + 1)(starting_point=0) == 2
 ```
 
-### 6.2. pass > the `init` name is incorrect - the point of `init` is to apply the `action` from the first param
+### 1.2. pass > the `init` name is incorrect - the point of `init` is to apply the `action` from the first param
 
 ```python
 # the abstraction of two with lambdas with f as first param and x as another param
@@ -247,7 +256,7 @@ repeat_plus_one = two(increment)
 assert repeat_plus_one(starting_point=0) == 2
 ```
 
-### 6.3. back to the lambdas with the two function
+### 1.3. back to the lambdas with the two function
 
 ```python
 two = lambda f: lambda x: f(f(x))
@@ -256,7 +265,7 @@ repeated_increment = two(increment)
 assert repeated_increment(0) == 2
 ```
 
-### 6.4. pass > example with tuple increment
+### 1.4. pass > example with tuple increment
 
 ```python
 def p(t: tuple) -> tuple:
@@ -278,7 +287,7 @@ assert three(p)((0,0)) == (3,2)
 assert three(p)((1,0)) == (4,3)
 ```
 
-### 6.5. you can rewrite `lambda`-defined functions in python for explicity
+### 1.5. you can rewrite `lambda`-defined functions in python for explicity
 * the above lambda implementation is the same as the named function implementation below
 * the named function has to contain a return statement, the lamnda cannnot
 
@@ -297,7 +306,7 @@ result = three(lambda x: x + 1)(0)
 assert result == 3
 ```
 
-### 6.6. fail > possibly a one-liner? no, that is a syntax error as `def` is not allowed,
+### 1.6. fail > possibly a one-liner? no, that is a syntax error as `def` is not allowed,
 * it is a compoud statement
 
 ```python
@@ -311,7 +320,7 @@ def three(fn:callable) -> callable: def inner(starting_point:any): return fn(fn(
 * therefore, for condensed expressions like this there are lambdas,
 * but you need to know how to read
 
-### 6.7. pass > how do you implement zero?
+### 1.7. pass > how do you implement zero?
 
 ```python
 zero = lambda f: lambda x: x
@@ -321,8 +330,8 @@ assert result == 999
 
 * the implementation of `zero` is identital to the implementation of `false`
 
-## 7. ARITHMETICS
-### 7.1. successor
+## 2. ARITHMETICS
+### 2.1. successor
 * what is the most minimal thing you need to do math?
 * there are peano axioms for math
 * the challenge is to implement successor
@@ -373,7 +382,7 @@ assert result == 3
 ```
 
 
-### 7.2. add
+### 2.2. add
 
 ```python
 from typing import any
@@ -395,7 +404,7 @@ result = add(addend1=one)(addend2=two)(increment)(0)
 assert result == 3
 ```
 
-### 7.3. multiplication
+### 2.3. multiplication
 * making m-times the n-times action 
 * note that `mul` takes `f`, while `add` takes `f` from `succ`
 
@@ -406,8 +415,15 @@ succ = lambda n: (lambda f: lambda x: f(n(f)(x)))  # n is church numeral
 add = lambda x: lambda y: y(succ)(x)
 mul = lambda x: lambda y: lambda f: y(x(f))
 ```
+# PART3:published
+> https://medium.com/p/97b61b22466c/edit
 
-## 8. DIGRESSION
+The aim of this multi_part series is to annotate David Baezley's [Lambda Calculus from the Ground Up](https://www.youtube.com/watch?v=pkCLMl0e_0k)
+This part is a digression from lambda calculus into a related/applied field of utilizing a concept similar to peano numbers to a getter of a nested data.
+It covers 10 mins of the workshop starting at ~01h:08min:07s –> https://youtu.be/pkCLMl0e_0k?si=biIoF1uLDbpe3zmB&t=4087 and going up to the break at ~01h:18min:42sec
+
+
+## 1. DIGRESSION
 * note below that `getc` is also again, again, again on the outer dictionary
 
 ```python
@@ -434,45 +450,11 @@ assert getc(data) == 42
 * this is the function with data already having a starting point
 
 
-### 8.1. aim: recurse up to the value with the `values()`
-#### 8.1.1. pass > test the method to return everything after the key: --> `list`
-```python
-data.values()
-# [ins] in [6]: data.values()
-# out[6]: dict_values([{'b': {'c': 42}}])
-```
-
-#### 8.1.2. fail > assign to an iterator object and iterate through `next`: there is only 1 iteration
-
-```python
-data_iterator=iter(data.values())
-data_iterator
-# [ins] in [8]: data_iterator
-# out[8]: <dict_valueiterator at 0x106fb2fc0>
-```
-* use the `next` function
-
-```python
-next(data_iterator)
-# [ins] in [9]: next(data_iterator)
-# out[9]: {'b': {'c': 42}}
-#
-# [ins] in [10]: next(data_iterator)
-# ---------------------------------------------------------------------------
-# stopiteration                             traceback (most recent call last)
-# cell in[10], line 1
-# ----> 1 next(data_iterator)
-#
-# stopiteration: 
-```
-
-### 8.2. back: you need to make every nested key a part of iteration - start with dabaez
-#### 8.2.1. pass > apply many if statements so that program does not crash
+### 1.1. apply many if statements so that program does not crash
 ```python
 from typing import any
 
 data = {"a": {"b": {"c": 42}}}
-
 
 def getc(d: dict) -> any:
     d = d.get("a")
@@ -486,7 +468,7 @@ def getc(d: dict) -> any:
 assert getc(d=data) == 42
 ```
 
-#### 8.2.2. add `perhaps` higher-order function either running passed func or returning none
+### 1.2. add `perhaps` higher-order function (hof) either running passed func or returning none
 * the pattern is having a hof, and that hof accepts data and function
 * within the hof, the function is eventually called, with data as argument
 
@@ -507,7 +489,7 @@ assert perhaps(d=data, func=lambda d: d.get("a")) == {"b": {"c": 42}}  # pass
 assert perhaps(d={}, func=lambda d: d.get("a")) == none  # pass
 ```
 
-#### 8.2.3. pass > add **chaining** to the `perhaps` getting nearer to recursion
+### 1.3. add **chaining** to the `perhaps` getting nearer to recursion
 * chaining means that you pass a function call of the same function `perhaps` into
     the `d` argument
 * this is recursive pattern, and you already have a base case in `perhaps`
@@ -542,7 +524,7 @@ assert result == 42
 ```
 
 
-#### 8.2.4. introduce the `class perhaps` to fix the chaining of `perhaps` function
+### 1.4. introduce the `class perhaps` to fix the chaining of `perhaps` function
 
 ```python
 from typing import union, any
@@ -567,12 +549,17 @@ class perhaps:
 perhaps(data) >> (lambda d:d.get('a'))
 ```
 
-#### 8.2.5. perhaps this is a monad
+### 1.5. perhaps this is a monad
 * associated with "turning a crank" on lots of function compositions
 * monad is like a song: perhaps, perhaps, perhaps
 
-## 9. SYMBOLS
-### 9.1. it is possible to minimize function definition
+# PART4:published
+> https://medium.com/p/ef24929d8d73/edit
+The aim of this multi_part series is to annotate David Baezley's [Lambda Calculus from the Ground Up](https://www.youtube.com/watch?v=pkCLMl0e_0k)
+This is the opening of the second part of the workshop
+
+## 1. SYMBOLS
+### 1.1. it is possible to minimize function definition
 
 ```python
 # most explicit and longest
@@ -593,14 +580,14 @@ and = lambda xy: x(y)(x)
 ```
 ```python
 def TRUE(x):
-    return lambda y: x  # vyberatko vrati predok
+    return lambda y: x  # selector returns a first item
 
 
 assert TRUE(1)(0) == 1
 
 
 def FALSE(x):
-    return lambda y: y  # vyberatko vrati zadok
+    return lambda y: y  # selector returns a second item
 
 
 assert FALSE(1)(0) == 0
@@ -614,8 +601,8 @@ def AND(x):
     return f
 
 
-assert AND(TRUE)(TRUE)(1)(1) == 1  # TRUE -> vyberatko vrati predok
-assert AND(TRUE)(FALSE)(1)(0) == 0  # FALSE -> vyberatko vrati zadok
+assert AND(TRUE)(TRUE)(1)(1) == 1  # TRUE -> selector returns a first item
+assert AND(TRUE)(FALSE)(1)(0) == 0  # FALSE -> selector returns a second item
 
 
 # enter nested lambda
@@ -623,27 +610,27 @@ def AND(x):
     return lambda y: x(y)(x)
 
 
-assert AND(TRUE)(TRUE)(1)(1) == 1  # TRUE -> vyberatko vrati predok
-assert AND(TRUE)(FALSE)(1)(0) == 0  # FALSE -> vyberatko vrati zadok
+assert AND(TRUE)(TRUE)(1)(1) == 1  # TRUE -> selector returns a first item
+assert AND(TRUE)(FALSE)(1)(0) == 0  # FALSE -> selector returns a second item
 
 # pure lambdas
 AND = lambda x: lambda y: x(y)(x)
 
-assert AND(TRUE)(TRUE)(1)(1) == 1  # TRUE -> vyberatko vrati predok
-assert AND(TRUE)(FALSE)(1)(0) == 0  # FALSE -> vyberatko vrati zadok
+assert AND(TRUE)(TRUE)(1)(1) == 1  # TRUE -> selector returns a first item
+assert AND(TRUE)(FALSE)(1)(0) == 0  # FALSE -> selector returns a second item
 
 # nested lambdas can be combined
 AND = lambda xy: x(y)(x)
-assert AND(TRUE)(TRUE)(1)(1) == 1  # TRUE -> vyberatko vrati predok
-assert AND(TRUE)(FALSE)(1)(0) == 0  # FALSE -> vyberatko vrati zadok
+assert AND(TRUE)(TRUE)(1)(1) == 1  # TRUE -> selector returns a first item
+assert AND(TRUE)(FALSE)(1)(0) == 0  # FALSE -> selector returns a second item
 
-assert AND(TRUE)(TRUE)(1)(1) == 1  # TRUE -> vyberatko vrati predok
-assert AND(TRUE)(FALSE)(1)(0) == 0  # FALSE -> vyberatko vrati zadok
+assert AND(TRUE)(TRUE)(1)(1) == 1  # TRUE -> selector returns a first item
+assert AND(TRUE)(FALSE)(1)(0) == 0  # FALSE -> selector returns a second item
 ```
 
 
-## 10. CONVERSIONS
-### 10.1. why is this called calculus: calculus is about conversions
+## 2. CONVERSIONS
+### 2.1. why is this called calculus: calculus is about conversions
 * in most known definitions, calculus is about "rate of change"
 * here, it has nothing to do with what - so why is it called calculus?
 * lambda - symbology. way of writing a function.
@@ -651,12 +638,13 @@ assert AND(TRUE)(FALSE)(1)(0) == 0  # FALSE -> vyberatko vrati zadok
 * calculus - there are bunch of **conversions** taking place in lambda expressions
     there are things you can do with functions
 * you can substitute thins in the symboloy
-### 10.2. Rule1: Alpha conversion - renamingjgoes
+
+### 2.2. Rule1: Alpha conversion - renamingjgoes
 * You can rename an argument,
 * if var `z` is used, it is reserved
 * caveat: can't introduce a name clash
 
-### 10.3. Rule2: Argument substitution goes
+### 2.3. Rule2: Argument substitution goes
 * you can substitute arguments
 * take what's in parenthesis and substitute
 * this is the essence of function call
@@ -672,7 +660,7 @@ def f(x,y):
 assert f(x,y) == 10
 ```
 
-### 10.4. Rule3: You can make a function
+### 2.4. Rule3: You can make a function
 
 ```python
 x=3
@@ -680,14 +668,15 @@ x=(lambda a:a)(3)
 assert x == 3
 ```
 
-### 10.5. Why are we talking about rules of lambda?
+### 2.5. Why are we talking about rules of lambda?
 * in the early 20th century there was a lots of discussion about the nature of Math
 * can all of mathematics be derived from symbolic manipulation?
 * if you had proper set of axioms - can you derive all of math
 * main figure: David Hilberg (1862-1943)
 * no creativity at all. with right set of axioms, could you just turn the crank and 
 * solve everything
-#### 10.5.1. Entscheidunsproblem
+
+#### 2.5.1. Entscheidunsproblem
 * is there an algorithm that takes
     * statement of first-order logic as an input
     * return boolean (yes/no) according to whether the statement is *universally valid*
@@ -695,24 +684,24 @@ assert x == 3
 * in other words - is there an algorithm to decide whether a given statement is
     * provable from the axioms, using the rules of logic
 
-#### 10.5.2. Responses: Goedel, Church, Turing; 1930s
+#### 2.5.2. Responses: Goedel, Church, Turing; 1930s
 1. Goedel - incompleteness theorem
 2. Church - lambda kalkul - no way you can get axiomatic system
 3. Turing - turing machines (equivalent to lambda kalkul)
-.
-.
-.
-McCarthy (Lisp) -> Djikstra -> SICP -> Closure -> UncleBob -> Primagean
 
-#### 10.5.3. Lisp
+```
+McCarthy (Lisp) -> Djikstra -> SICP -> Closure -> UncleBob -> Primagean
+```
+
+#### 2.5.3. Lisp
 We're using lambda notation 
 Lisp paper is talking about AI - is there any other mention of lambda kalkul
 we're borrowing notation
 lambda is a convenient way to express functions
 Lisp has a connection
 
-## 11. LISTS
-### 11.1. 1957 0 IMB 704(1957)
+## 3. LISTS
+### 3.1. 1957 0 IMB 704(1957)
 * in lambda kalkul world, is there a way to build datastructure
 * how can you do list in lambda kalkul?
 * you can build datastructures similarly like you build switch -> boolean expression -> boolean logic
@@ -720,7 +709,7 @@ Lisp has a connection
 * the `cons`, `car` and `cdr` names are from the names of hardware parts from IBM704
 * you build a data structure entirely from function definition
 
-### 11.2. cons, car, cdr
+### 3.2. cons, car, cdr
 
 ```python
 from typing import Any
@@ -747,7 +736,7 @@ assert cdr(data) == 222
 * there is nothing in it, just action, all of which you can build to things
 * this is probably something along these lines
 
-### 11.3. back to the beginnng and the switch
+### 3.3. back to the beginnng and the switch
 * the pair requires three Parameters
 * One parameter is the first value, the second parameter is the second value, and the third parameter is a function
 * Therefore, you know, the lambda calculus function has two nested functions
@@ -782,14 +771,13 @@ assert p(cdr) == 3
 * this is a mind blowing idea - just from a function you can build a data structure
 * sort of out of nothingness, in SICP they said out of thin air
 
-### 11.4. As opposed to what? Traditional code-to-metal mapped DSs.
+### 3.4. As opposed to what? Traditional code-to-metal mapped DSs.
 * As opposed to implementing code that would map the data used to hardware
 * remember cs50 and the basic explanation of an array: you place data in contiguous registers in memory
 * the memory is a physical box, you have "cranes" that put things in there and take out "things" ouf of there
 * here, you don't care about hardware at all - machine is irrelevant. it's the mind that matters
 
-### 11.5. Enter closure: The second item of a pair can be a list
-See /Users/mr_paul/kb/sicp/05_01-Closure.md for closure definition. 
+### 3.5. Enter closure: The second item of a pair can be a list
 This is the foundation
 It works and it is extensible
 The second item of first pair is the rest of the list
@@ -857,7 +845,7 @@ pair2 = CONS(3)(4)
 assert CDR(pair2) == 4
 ```
 
-### 11.6. there are three ways you can use functions as parameter
+### 3.6. there are three ways you can use functions as parameter
 Within the parameter you can pass these three variations:
 
 1. Function name
@@ -887,9 +875,19 @@ assert CDR(pair) == 1
 * The other functions are selectors
 * The combination of these two + closure is what allows building complex system
 
-## 12. SUBTRACTIONS
-### 12.1. WIP > Let's rewrite basic pair functions CONS and CAR and church numeral + SUCC: understand T=...
+# PART5:published
+> https://medium.com/@pavolkutaj/the-annotated-lambda-calculus-from-the-ground-up-part-5-67a167c21808
+
+The aim of this multi_part series is to annotate David Baezley's [Lambda Calculus from the Ground Up](https://www.youtube.com/watch?v=pkCLMl0e_0k).
+Part5 follows up [part2](https://medium.com/@pavolkutaj/part2-bf44d0fc4f7b) and implementing of basic arithmetic operations with lambda calculus. 
+Part5 focuses on subtraction. Starting at [02h12m20s](https://youtu.be/pkCLMl0e_0k?si=l4LArQa6NwpEAY3t&t=7940) it covers only ~10minutes. 
+For me, this is entering a more dense/complicated territory, so there's lots of longhand and perhaps too repetitive motions. 
+
+
+## 1. SUBTRACTIONS
+### 1.1. Let's rewrite basic pair functions CONS and CAR and church numeral + SUCC
 * this is just to repeat and rewrite in lambda functions
+
 ```python
 # pair
 CONS = lambda a: lambda b: lambda selector: selector(a)(b)
@@ -922,7 +920,7 @@ assert FIVE(fn=plusone)(init_value=1) == 6
 assert CAR(pair1) == 1
 ```
 
-### 12.2. how can we subtract?
+### 1.2. how can we subtract
 * how do you get from one number to previous number?
 * so if `THREE` is the following ~> how would you get `TWO`?
 * the idea could be
@@ -957,7 +955,7 @@ assert CAR(a)(plusone)(0) == 3
 assert CDR(a)(plusone)(0) == 2 # get a previous number
 ```
 
-### 12.3. let's rewrite into proper function - make_incremented_CONS longhand
+### 1.3. let's rewrite into proper function - make_incremented_CONS longhand
 
 ```python
 # given a pair created by CONS funcion
@@ -980,7 +978,7 @@ assert c(fn=plusone)(init_value=0) == 2
 ```
 
 
-### 12.4. Use `make_incremented_CONS` to make a PREDeccessor as opposite to SUCCessor
+### 1.4. Use `make_incremented_CONS` to make a PREDeccessor as opposite to SUCCessor
 
 ```python
 from typing import Any
@@ -991,7 +989,7 @@ d=get_previous_value(church_numeral=THREE)
 assert d(fn=plusone)(init_value=0) == 2 # PASS
 ```
 
-### 12.5. Call Stack Visualized
+### 1.5. Call Stack Visualized (LLM_assisted)
 
 ```
 get_previous_value(church_numeral=THREE)
@@ -1062,14 +1060,15 @@ Function Breakdown:
 - Church numeral applies a function n times to an initial value
 ```
 
-### 12.6. Combining Church Numerals
+### 1.6. Combining Church Numerals
 
 ```python
 SIXTEEN=TWO(fn=FOUR) # -> lambda fn: lambda init_value: FOUR(FOUR(init_value)) -> SIXTEEN
 assert SIXTEEN(plusone)(0) == 16 # PASS
 ```
 
-#### 12.6.1. applying substitition rule
+#### 1.6.1. applying substitition rule (LLM_assisted)
+
 ```
 # Goal: Evaluate TWO(FOUR)(plusone)(0)
 
@@ -1168,7 +1167,7 @@ assert SIXTEEN(plusone)(0) == 16 # PASS
 # 16
 ```
 
-### 12.7. add church_numeral combination with `PRED`
+### 1.7. add church_numeral combination with `PRED`
 
 ```python
 EIGHTYONE = FOUR(THREE)
@@ -1176,7 +1175,7 @@ e = get_previous_value(EIGHTYONE)
 assert e(plusone)(0) == 80
 ```
 
-### 12.8. PASS > with `fn` being plustwo, the previous value is `160`: previous value of a fn call
+### 1.8. PASS > with `fn` being plustwo, the previous value is `160`: previous value of a fn call
 * forget about numbers, this is about **output**
 
 ```python
@@ -1184,13 +1183,12 @@ assert FOUR(THREE)(lambda n: n + 2)(0) == 162
 assert get_previous_value(FOUR(THREE))(lambda n: n + 2)(0) == 160
 ```
 
-## 13. SUBTRACTION
-### 13.1. how to define custom function in the most easiest way: use `typing.Callable`
+### 1.9. how to define custom function in the most easiest way: use `typing.Callable`
 * for the matter of clarity, I would like to simply have a type hint of a custom type
 * I don't need an implementation of fuctom type, but if it is a church numeral function,
 * I would like to haave a function definintion of something like
 
-### 13.2. let's build up dependencies
+### 1.10. let's build up dependencies
 
 ```python
 from typing import Callable, Any
@@ -1222,7 +1220,7 @@ assert TWO(PLUSONE)(0) == 2
 assert PRED(TWO)(PLUSONE)(0) == 1
 ```
 
-### 13.3. and now, the new thing - using `PRED` for subtraction
+### 1.11. and now, the new thing - using `PRED` for subtraction
 * to substract x-y, you need to do `y` applications of `PRED` to `x`
 * to subtract 5-2, you need to do two applications of pred to five
 * five applications of `PRED` to `two`
@@ -1242,14 +1240,21 @@ FOUR(PLUSONE)(0) == 4
 assert (SUB(FOUR)(TWO))(PLUSONE)(0) == 2
 ```
 
-## 14. TEST FOR ZERO
+# PART6:published
+> https://pavolkutaj.medium.com/the-annotated-lambda-calculus-from-the-ground-up-part-6-846182aff0e1
+
+The aim of this multi_part series is to annotate David Baezley's [Lambda Calculus from the Ground Up](https://www.youtube.com/watch?v=pkCLMl0e_0k)
+Part6 focuses on the implementation of an `ISZERO` statement, building on the implementation of subtraction in [Part5](https://medium.com/@pavolkutaj/the-annotated-lambda-calculus-from-the-ground-up-part-5-67a167c21808)
+It covers [02h22m50s](https://youtu.be/pkCLMl0e_0k?si=scjnQ-BH_HVhFxTE&t=8570)-[02h30m-20s](https://youtu.be/pkCLMl0e_0k?si=znovWgVdq-X2nnpw&t=9020)
+
+## 1. TEST FOR ZERO
 * if you can test number for ZERO it allows you to start checking things
 * why?
 * if you can start doing tests, you can start thinking about control flow
 * like if statement - test, and select one of two branches, essential for computability
 * uncle bob reference to paper how can programing be reduced
 
-### 14.1. test for zero: the build_up
+### 1.1. test for zero: the build_up
 
 ```python
 # build pairs
@@ -1285,7 +1290,7 @@ FALSE = lambda left_hand: lambda right_hand: right_hand
 assert TRUE(left_hand="green pill")(right_hand="red pill") == "green pill"
 assert FALSE(left_hand="green pill")(right_hand="red pill") == "red pill"
 ```
-### 14.2. test for zero: the addition
+### 1.2. test for zero: the addition
 * since this is new, we first need a longhand
 * the following works given our implementation of booleans as selectors between two "pills"
 * the `ISZERO` contains only functions
@@ -1350,8 +1355,16 @@ ISZERO(THREE)
 => FALSE                                       # because (lambda g: FALSE)(FALSE) => FALSE
 ```
 
-## 15. THE ASSEMBLY
-* up until here, we have created an "assembly code" of functions
+# PART7:published
+> https://medium.com/@pavolkutaj/the-annotated-lambda-calculus-from-the-ground-up-part-7-f890ea683657
+
+The aim of this multi_part series is to annotate David Baezley's [Lambda Calculus from the Ground Up](https://www.youtube.com/watch?v=pkCLMl0e_0k)
+Part6 focuses on the implementation of an `FACTORIAL` function, building on the implementation of `ISZERO` in [Part6](https://pavolkutaj.medium.com/the-annotated-lambda-calculus-from-the-ground-up-part-6-846182aff0e1)
+
+It covers [02h30m11s](https://youtu.be/pkCLMl0e_0k?si=N03G39clne5pOEAu&t=9011)-[02h47m35s](https://youtu.be/pkCLMl0e_0k?si=q_Wp33yLeerg9Yx3&t=10055)
+
+## 1. THE ASSEMBLY
+* In the first 6 parts of the series/the workshop up until now, we have created an "assembly code" of functions
 
 ```
 AND
@@ -1370,12 +1383,12 @@ ISZERO
 
 * ... it is kind of like **machine code**
 * it is very abstract, purely in the world of function
-* but having that - you can have more interesting things like writing recurive functions
+* but having that - you can have more interesting things like writing **recursive functions**
 
-## 16. FACTORIAL WITH RECURSION
+## 2. FACTORIAL WITH RECURSION
 * first, let's start with factorial in a python way
 
-### 16.1. Usual Python implementation of factorial
+### 2.1. Usual Python implementation of factorial
 
 ```python
 def fact(n):
@@ -1388,7 +1401,7 @@ def fact(n):
 assert fact(3) == 6
 ```
 
-### 16.2. The new thing: take `ISZERO` to implement base case
+### 2.2. The new thing: take `ISZERO` to implement base case
 * take the number
 * do `ISZERO` check and return church boolean
 * church booleans work like an if statement 
@@ -1401,7 +1414,7 @@ def FACT(n: church_numeral) -> church_numeral:
 ```
 
 
-#### 16.2.1. the build_up: ISZERO, we need church_numerals + church_booleans
+#### 2.2.1. the build_up: for ISZERO, we need church_numerals + church_booleans
 
 ```python
 ZERO = lambda fn: lambda init: init
@@ -1419,7 +1432,7 @@ assert ISZERO(ONE)(1)(0) == 0 # False is selecting right hand
 # n is church_numeral -> we need church numerals
 ```
 
-#### 16.2.2. the build_up: `MUL`:
+#### 2.2.2. the build_up: `MUL`:
 
 ```python
 MUL = lambda x: lambda y: lambda f: y(x(f))
@@ -1428,7 +1441,7 @@ THREE = SUCC(TWO)
 assert MUL(THREE)(TWO)(lambda n: n+1)(0) == 6
 ```
 
-#### 16.2.3. the build_up: `PRED`
+#### 2.2.3. the build_up: `PRED`
 
 ```python
 CONS = lambda a: lambda b: lambda s: s(a)(b)
@@ -1446,7 +1459,7 @@ assert PRED(SUCC(ONE))(lambda n: n+1)(0) == 1
 ```
 
 
-#### 16.2.4. finished with the build_up ~> let's compose a first recursive function
+#### 2.2.4. finished with the build_up ~> let's compose a first recursive function
 
 ```python
 from typing import Callable, Any
@@ -1466,7 +1479,7 @@ assert FACT(THREE)(lambda x: x+1)(0) == 6
 * it blows up in infinite recursion - why is that?
 * increasing recursion depth is not going to help 
 
-#### 16.2.5. explaining why the above is not working in python
+#### 2.2.5. explaining why the above is not working in python
 does substition work in python same as it would in math/lisp
 
 
@@ -1480,18 +1493,18 @@ assert f(3) == 10
 * python evaluates arguments first: first `1+2` then pass into function
 *
 
-#### 16.2.6. hypothesis from claude: this is python's eager evaluation
+#### 2.2.6. this is python's eager evaluation
 The problem seems to be the order of execution
 
 ```python
 FACT = lambda n: ISZERO(n)(ONE)(MUL(n)(FACT(PRED(n))))
 ```
 
-Should be: 
+**Should be**: 
 1. eval `ISZERO` **only** - once you get result which is `TRUE`/`FALSE`
 2. eval `TRUE(ONE)(MUL(n)(FACT(PRED(n))))`
 
-Is: everything is evaluated **eagerly**, then first function is evaluated. 
+**Is**: everything is evaluated **eagerly**, then first function is evaluated. 
 
 ```python
 from typing import Any
@@ -1546,7 +1559,7 @@ selector("left")("return value: left")("return value: right")
 #                    these pre-computed values
 ```
 
-### 16.3. dabez explanation
+### 2.3. further explanation of python's eager eval
 * the logic if the factorial can be - in python terms - expressed as
 
 ```python
@@ -1590,7 +1603,7 @@ a if a == 0 else 1/a
 * it does go down both paths, both the base case AND recurrence relation simultaneously
 * this then explodes in infinite recursion
 
-### 16.4. how can we turn that off the eager evaluation: move expression into a 0 arg function
+### 2.4. how can we turn that off the eager evaluation? move expression into a 0 arg function
 * let's say we want to turn of `1/a`
 * --> shove it in to 0 arg function, delay the calculation in some later point in time
 * this is exactly how "function as parameters" work - they are called only when needed
@@ -1602,7 +1615,7 @@ f()  # explodes upon call
 # ZeroDivisionError: division by zero
 ```
 
-### 16.5. apply the "trick" to the `choose` function
+### 2.5. apply the "trick" to the `choose` function
 
 ```python
 from typing import Callable, Any
@@ -1625,16 +1638,13 @@ choose(a == 0, lambda: a, lambda: 1 / a)
 # 0
 ```
 
-### 16.6. is this common for other languages: LLM to check which language does not do that
-Dabaez says almost every programming language does it the same way
-
-### 16.7. how to fix: implement lazy evaluation to the `FACT` function
+### 2.6. how to fix: implement lazy evaluation to the `FACT` function
 introduce extra function call in there
 it is not part of lambda calculus - it is hack to not to both branches of `if`
 this concept of "when functions evaluate" is a big focus in functional programming
 we are facing it here
 
-### 16.8. apply the lambda wrapper to all of the elements of `FACT` what may break the functionality
+### 2.7. apply the lambda wrapper to all of the elements of `FACT` what may break the functionality
 
 ```python
 # numerals: zero + succ
@@ -1679,26 +1689,34 @@ FACT = lambda n: ISZERO(n)\
 assert FACT(THREE)(lambda n: n+1)(0) == 6
 ```
 
-## 17. WAIT - THERE WERE VARIABLES UP UNTIL NOW
+# PART8
+This is a final (and by far most challenging/grandious) installment of a multi_part series is to annotate David Baezley's [Lambda Calculus from the Ground Up](https://www.youtube.com/watch?v=pkCLMl0e_0k)
+Part8 focuses on the implementation of a Y-combinator, building up on an implementation of a `FACTORIAL` function but removing
+1. named variables
+2. self-reference in recursion
+
+It begins at [02h47m35s](https://youtu.be/pkCLMl0e_0k?si=q_Wp33yLeerg9Yx3&t=10055) and runs to the end of the great workshop.
+
+## 1. IN PART7 WE'VE IMPLEMENTED `FACTORIAL` BUT WAIT - THERE WERE VARIABLES UP UNTIL NOW
 > https://youtu.be/pkCLMl0e_0k?si=ejwDcR6fgNKs69J8&t=10055
-* lambda calculus does not allow global variables
+* and lambda calculus does not allow global variables
 * what we were doing with `FACT = ...` is not allowed
 * because you are _storing_ the names somewhere
 * this is a new programming problem when you start — finally — talking about **recursion**
 * the idea of recursion is **referring to yourself**
 
-### 17.1. given a canonical recursive function: factorial
+### 1.1. let's start from a canonical definition of `factorial` as a recursive func
 
 ```python
 fact = lambda n: 1 if n==1 else n*fact(n-1)
 assert fact(3) == 6
 ```
 
-### 17.2. challenge: rewrite that with no self-reference to `fact`
+### 1.2. challenge: rewrite that with no self-reference to `fact`
 * how we can we **not have** that `fact` in the function definition?
 
-### 17.3. approach 1: pass `fact` as an argument
-* move the fact out into the outer part
+### 1.3. approach 1: pass `fact` as an argument
+* --> move the fact out into the outer part
 
 ```python
 fact = lambda n: 1 if n==1 else n*fact(n-1)                  # OLD
@@ -1723,8 +1741,7 @@ fact = (lambda f: lambda n: 1 if n == 0 else n*f(n-1))(fact) # NEW
 
 -> the assignment semantics in python first evaluate the left side of `=` and `fact` does not exist at that point
 
-
-### 17.4. solution: do the opposite you've been told about proper software - repeat yourself!
+### 1.4. solution: do the opposite you've been told about proper software - repeat yourself!
 * use the idea above of using an outer lambda — but instead of a function call, rewrite the function definition
 * which is he opposite of what you've been told about writing software: repeat yourself[1]
 * just cut and paste the code and do it twice
@@ -1735,23 +1752,21 @@ fact = (lambda f: lambda n:1 if n == 0 else n*f(n-1))\
 fact(4)
 ```
 
-* initially, this does blow up with
-
-```
-TypeError: unsupported operand type(s) for *: 'int' and 'function'
-```
+* initially, this does blow up with a `TypeError`
 
 ```python
 fact = (lambda f: lambda n:1 if n == 0 else n*f(n-1))\
        (lambda f: lambda n:1 if n == 0 else n*f(n-1))
                                              #^^^^^^^
-fact(4)
+fact(4) # FAIL
+# TypeError: unsupported operand type(s) for *: 'int' and 'function'
 ```
 
 * the thing that's wrong is that the "API" is not being followed
 * the API is — pass function first, number second - the first attempt is passing just number
 * --> you need an `f`, otherwise you are missing an argument in the broken call
-### 17.5. solution that works
+
+### 1.5. solution that works
 
 ```python
 fact = (lambda f: lambda n:1 if n == 0 else n*f(f)(n-1))\
@@ -1759,7 +1774,7 @@ fact = (lambda f: lambda n:1 if n == 0 else n*f(f)(n-1))\
 assert fact(4) == 24 # PASS 
 ```
 
-#### 17.5.1. Initial Function Structure
+#### 1.5.1. Initial Function Structure
 
 ```
 fact = (lambda f: lambda n: 1 if n == 0 else n*f(n-1))(lambda f: lambda n: 1 if n == 0 else n*f(n-1))
@@ -1775,14 +1790,14 @@ f-param        = lambda f: lambda n: 1 if n == 0 else n*f(n-1)
 fact = outer_function(f-param)
 ```
 
-#### 17.5.2. What `fact` Actually Is
+#### 1.5.2. What `fact` Actually Is
 
 ```
 fact = lambda n: 1 if n == 0 else n*f(n-1)
        └─ where f = (lambda f: lambda n: 1 if n == 0 else n*f(n-1))
 ```
 
-#### 17.5.3. Call Stack Analysis: fact(4)
+#### 1.5.3. Call Stack Analysis: fact(4)
 
 **Stack Frame 1: fact(4)**
 
@@ -1815,7 +1830,7 @@ Expected:    f(some_function, 3)
 Got:         f(3)
 ```
 
-#### 17.5.4. The Error Occurs
+#### 1.5.4. The Error Occurs
 
 ```
 ┌─────────────────────────────────────────┐
@@ -1837,7 +1852,7 @@ Got:         f(3)
 └─────────────────────────────────────────┘
 ```
 
-#### 17.5.5. Visual Type Mismatch
+#### 1.5.5. Visual Type Mismatch
 
 ```
 Expected computation:  4 * (recursive_result)
@@ -1851,7 +1866,7 @@ Actual computation:    4 * f(n-1)
                            trying to call integer 3 as function
 ```
 
-#### 17.5.6. The Fix: f(f)(n-1)
+#### 1.5.6. The Fix: f(f)(n-1)
 
 ```
 f(f)(n-1) breakdown:
@@ -1880,7 +1895,7 @@ Call stack with fix:
 ```
 [1] https://wiki.c2.com/?DontRepeatYourself
 
-## 18. FIXED POINTS
+## 2. FIXED POINTS
 > https://youtu.be/pkCLMl0e_0k?si=G1Sa8v30bMT0T9FX&t=10765
 * imagine pressing square root of a number repeatedly, say when you were bored at school
 * pressing square root over and over again brings you eventually to one
@@ -1922,14 +1937,14 @@ returns
 * this is one of the most interesting things of all about lambda calculus - exploring fixed points
 * this matters because the fix-point concept is the foundation of computational recursion
 
-### 18.1. let's look at original factorial to start talking about fixed points'
+### 2.1. let's look at original factorial to start talking about fixed points'
 
 ```python
 fact = lambda n: 1 if n == 0 else n*fact(n-1)
 assert fact(4) == 24
 ```
 
-### 18.2. we've removed `fact` from the function definition - inially just by wrapping the function into another lambda
+### 2.2. we've removed `fact` from the function definition - inially just by wrapping the function into another lambda
 * of course this only works if you have the original `fact` 👆 at hand
 
 ```python
@@ -1937,7 +1952,7 @@ fact = (lambda f: lambda n: 1 if n == 0 else n*f(n-1))(fact)
 assert fact(4) == 24
 ```
 
-### 18.3. take the middle part and put it into its own variable
+### 2.3. take the middle part and put it into its own variable
 
 ```python 
 R = lambda f: lambda n: 1 if n == 0 else n * f(n - 1)
@@ -1949,7 +1964,7 @@ assert fact(4) == 24
 * passing `fact` initially refers to the original `fact=lambda n: 1 if n==0 else n*fact(n-1)`
 * the `R` closes over that original function and "remembers" it
 
-### 18.4. sitestep: visualizing closure
+### 2.4. sitestep: visualizing closure
 * nothing other than function mechanism is allowed
 * no packages, no objects, no numbers, no strings, no types - only functions; no operators
 * can you compute anything if a single-argument function is the only thing in the universe?
@@ -1957,14 +1972,14 @@ assert fact(4) == 24
 
 ![](Pasted%20image%2020250825064358.png)
 
-### 18.5. Realize: in `fact=R(fact)`, `fact` must be a **fixed point of R**
+### 2.5. Realize: in `fact=R(fact)`, `fact` must be a **fixed point of R**
 * the whole idea of fixed is that you have a function where you pass something in --> you get identical thing back
 * square root of one is one
 * R(fact) gets you back to fact
 * however, `fact` is not a value!
 * we still do not know what `fact` is 
 
-### 18.6. The idea of getting the to the fixed point
+### 2.6. The idea of getting the to the fixed point
 1. You **know the algorithm** or the solution beforehand
 2. You cannot use self-reference because lambda calculus works only with anonymous functions
 3. You need a function definition of the anonymous function that would be referenced 
@@ -1975,7 +1990,7 @@ Previously, we found the fixed point by copy-pasting and following the "API" of 
 That does not always have to be the case - there is a specific higher order function that generates
 the fixed point based on the template to have recursion. This is called **fixed point combinator**
 
-### 18.7. LEAP: Suppose that there is a function Y that computes the fixed point of R
+### 2.7. LEAP: Suppose that there is a function Y that computes the fixed point of R
 * Typical math trick — **supposed** there is such a thing that it exists, the function `Y`
 * Another, yet even higher-order function
 * You put your logic into the template `R`, but you don't know what the definition of self-reference would be
@@ -1983,7 +1998,6 @@ the fixed point based on the template to have recursion. This is called **fixed 
 * The `Y(R)` would be that -> generator of fixed point of R(whatever it is)
 * Then `Y(R)` = `R(Y(R))` which would replace `fact`
 * Then a little recursion trick
-
 
 ```python
 Y(R) = R(Y(R)) # replace fact with supposed `Y`
@@ -1999,7 +2013,7 @@ Y(R) = lambda
 * In Python  it does not work because of infinite recursion error because it does eager evaluation
 * The solution would be - ironically - solution to all python problems - you put a decorator on it
 
-#### 18.7.1. Starting point: `fact` is a fixed point of a recursion template holding the program logic
+#### 2.7.1. Starting point: `fact` is a fixed point of a recursion template holding the program logic
 
 ```python
 # original
@@ -2015,7 +2029,7 @@ fact = R(fact) # this is not valid python; it's a mathematical contruct
 * - it cannot be identical as the problem definition as it needs to adopt its form
 * ...to the parametrization of the function calls
 
-#### 18.7.2. Wishful thinking: Suppose there is such a function that can generate a fixed point function
+#### 2.7.2. Wishful thinking: Suppose there is such a function that can generate a fixed point function
 * from `fact = R(fact)` we have established that `R` is a fixed point type of function
 * this is **not** a fixed point function that **iteratively converges** to a fixed point
     * ...like one used for finding statistical avefage, or cos(x) or square root
@@ -2034,7 +2048,7 @@ Y(R) = R(Y(R))
 
 * we've abstracted `fact` away now by substitution/replacement
 
-#### 18.7.3. Recursion trick on `fact` (extract self-reference into parameter)
+#### 2.7.3. Recursion trick on `fact` (extract self-reference into parameter)
 * Pull a named function into a variable out of function definition / function call
 * We've done it when we've removed the self-referring `fact` from the function definition
 
@@ -2047,7 +2061,7 @@ Y(R) = R(Y(R))
 Y(R) = (lambda f: R(f))(Y(R))
 ```
 
-#### 18.7.4. Repeat Yourself Trick
+#### 2.7.4. Repeat Yourself Trick
 * Again, the same step done to `fact`, what you're told never to do: to repeat yourself
 
 ```
@@ -2067,7 +2081,7 @@ Y(R) = (lambda f: R(f))\
        (lambda f: R(f))
 ```
 
-#### 18.7.5. Fixing Repeat Yourself by fixing the API via adding a buffer f(f)
+#### 2.7.5. Fixing Repeat Yourself by fixing the API via adding a buffer f(f)
 * the above is broken for both `fact` and `Y(R)`
 * it is that there is a signature of the called function and you need to pass parameters it requires
 * let's draw this for `fact`
@@ -2157,7 +2171,7 @@ Y(R) = R(
 
 * etc. etc. etc. - until you give it a number
 
-#### 18.7.6. Recursion trick on `R` (extract self-reference into parameter)
+#### 2.7.6. Recursion trick on `R` (extract self-reference into parameter)
 * Before starting the infite recursion above 
 * We buffered the call to ensure the 'API' works and were at
 * The "looks like a formula" -> we can "pull out the R" 
@@ -2171,7 +2185,7 @@ Y(R) = (lambda g:
         )(R)
 ```
 
-#### 18.7.7. final: drop r (template) from both sides of the assignment/equation ~> y combinator
+#### 2.7.7. final: drop r (template) from both sides of the assignment/equation ~> y combinator
 
 ```python
 # previous
@@ -2182,7 +2196,7 @@ y(r) = (lambda g: (lambda f: g(f(f)))(lambda f: g(f(f))))(r)
 y = lambda g: (lambda f: g(f(f)))(lambda f: g(f(f)))
 ```
 
-#### 18.8. notes on derived y combinator
+#### 2.7.8. notes on derived y combinator
 * the way you use it
 1. define recursive relationship/logic into a template
 2. apply template to y combinator
@@ -2202,5 +2216,4 @@ y = lambda r: (lambda f: r(f(f)))(lambda f: r(f(f)))
 fact = y(r)
 result = fact(10)
 ```
-> explaining the mechanics of Y combinator, what is g/r, what if f? 
-### 18.9. how to fix infinite recursion problem: put a decorator on it!
+
